@@ -1,6 +1,14 @@
 version: "3"
 services:
   nginx:
-    build: nginx/
+    build: nginx/.
     port:
-      - "5000: 80"
+      - "80:80"
+  mariadb:
+    build: mariadb/.
+    port:
+      - "3306:3306"
+  wordpress:
+    build: wordpress/.
+    port:
+      - "9000:9000"
