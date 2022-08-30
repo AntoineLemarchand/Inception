@@ -16,8 +16,6 @@ RUN	apk add nginx && \
 COPY	conf 			/etc/nginx/nginx.conf
 ARG	DOMAIN_NAME
 
-RUN echo "<html><h1>hello world, this is " $DOMAIN_NAME "</h1></html>" > /www/index.html
-
 # exposing needed port
 EXPOSE	443
 

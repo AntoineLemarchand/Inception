@@ -1,13 +1,39 @@
 version: "3"
 services:
-  nginx:
-    build:
-      context: requirements/nginx/.
-      args:
-        DOMAIN_NAME: $DOMAIN_NAME
-    ports:
-      - "443:443"
-    volumes:
-      - $CERTS_/localhost.crt:/etc/nginx/nginx.crt
-      - $CERTS_/localhost.key:/etc/nginx/nginx.key
-    container_name: nginx
+    nginx:
+        build:
+            context: requirements/nginx/.
+        args:
+            DOMAIN_NAME: $DOMAIN_NAME
+        ports:
+            - "443:443"
+        volumes:
+            - $CERTS_/localhost.crt:/etc/nginx/nginx.crt
+            - $CERTS_/localhost.key:/etc/nginx/nginx.key
+            - $WORDPRESS_VOLUMES: /www/
+        depends_on:
+            - "wordpress"
+        restart: always
+        container_name: nginx
+
+    wordpress:
+        build:
+            context: requirements/wordpress/.
+        ports:
+            - "9000:9000"
+        volumes:
+            - $WORDPRESS_VOLUMES: /usr/share/webapps/wordpress/
+        container_name: wordpress
+        restart: always
+            
+
+        #mariadb:
+        #build:
+        #context: requirements/mariadb/.
+        #args:
+        #MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD;
+        #MYSQL_USER: $MYSQL_USER;
+        #MYSQL_PASSWORD: $MYSQL_PASSWORD;
+        #ports:
+        #- "3306:3306"
+        #volumes:
