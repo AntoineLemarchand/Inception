@@ -8,14 +8,6 @@ services:
     ports:
       - "443:443"
     volumes:
-      - ./requirements/nginx/tools/localhost.crt:/etc/nginx/nginx.crt
-      - ./requirements/nginx/tools/localhost.key:/etc/nginx/nginx.key
+      - $CERTS_/localhost.crt:/etc/nginx/nginx.crt
+      - $CERTS_/localhost.key:/etc/nginx/nginx.key
     container_name: nginx
-        #mariadb:
-        #build: mariadb/.
-        #port:
-        #- "3306:3306"
-        #wordpress:
-        #build: wordpress/.
-        #port:
-        #"9000:9000"

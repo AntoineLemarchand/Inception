@@ -20,6 +20,7 @@ http {
 		ssl_certificate 	/etc/nginx/nginx.crt;
 		ssl_certificate_key 	/etc/nginx/nginx.key;
 		ssl_ciphers		HIGH:!aNULL:!MD5;
+		ssl_protocols	 	TLSv1.3;
 		server_name		$DOMAIN_NAME;
 		root                    /www;
 		index                   index.html index.htm;
