@@ -1,14 +1,13 @@
 #!/bin/sh
 
-if [ ! -d "/run/mysqld" ]; then
-	mkdir -p /run/mysqld
-fi
-
+mkdir -p /run/mysqld
 temp="$(mktemp)";
 
 if [ ! -f "$temp" ]; then
 	return 1
 fi
+
+mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql > /dev/null
 
 cat << EOF > $temp
 USE mysql;
@@ -22,4 +21,4 @@ echo "GRANT ALL ON 'wordpress_db'.* to '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_P
 mysqld -u root < $temp
 rm -f $temp
 
-exec mysqld -u root -p
+exec mysqld -u root
