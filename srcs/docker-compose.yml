@@ -10,28 +10,28 @@ services:
       - $CERTS_/localhost.crt:/etc/nginx/nginx.crt
       - $CERTS_/localhost.key:/etc/nginx/nginx.key
       - /home/alemarch/WordPress:/www
-        #    depends_on:
-      #- "frontend"
+    depends_on:
+      - "frontend"
     build:
       context: requirements/nginx/.
       args:
         DOMAIN_NAME: $DOMAIN_NAME
 
-          #frontend:
-          #image: "my_wordpress:0.1"
-          #restart: always
-          #ports:
-          #- "9000:9000"
-          #volumes:
-          #- /home/alemarch/data/WordPress/:/www
-          #- /home/alemarch/data/DB:/var/lib/mysql
-          #depends_on:
-          #- "backend"
-          #build:
-          #context: requirements/wordpress/.
-          #args:
-          #MYSQL_USER: $MYSQL_USER
-          #MYSQL_PASSWORD: $MYSQL_PASSWORD
+  frontend:
+    image: "my_wordpress:0.1"
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /home/alemarch/data/WordPress/:/www
+      - /home/alemarch/data/DB:/var/lib/mysql
+    depends_on:
+      - "backend"
+    build:
+      context: requirements/wordpress/.
+      args:
+        MYSQL_USER: $MYSQL_USER
+        MYSQL_PASSWORD: $MYSQL_PASSWORD
 
   backend:
     image: "my_mariadb:0.1"
