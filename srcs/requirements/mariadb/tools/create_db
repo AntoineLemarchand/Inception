@@ -1,1 +1,4 @@
 CREATE DATABASE wordpress;
+GRANT ALL ON wordpress.* TO 'wp'@localhost identified by '$MYSQL_ROOT_PASSWORD';
+GRAND USAGE ON wordpress.* TO '$MYSQL_USER'@localhost identified by '$MYSQL_PASSWORD'
+FLUSH PRIVILEGES;

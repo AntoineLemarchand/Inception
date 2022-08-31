@@ -1,4 +1,4 @@
-FROM	alpine:latest
+FROM	alpine:3.16
 
 # Setting up system
 RUN	apk update && \

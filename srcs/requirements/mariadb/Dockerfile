@@ -1,4 +1,7 @@
-FROM	alpine:latest
+FROM	alpine:3.16
+
+# exposing port
+EXPOSE 3306
 
 # Setting up system
 RUN		apk update && \
@@ -6,11 +9,11 @@ RUN		apk update && \
 		apk upgrade --available
 
 # getting source
-RUN		apk add mysql mysql-client
+RUN		apk add mysql mysql-client bash
 
-# settind up mariadb
-COPY	 tools/create_db create_db
-RUN		 mariadb
-
-# exposing port
-EXPOSE 3306
+# setting up mariadb
+RUN		rm -rf /var/lib/mysqld/ib*
+COPY	conf			/etc/mysql/my.cnf
+COPY	tools/init.sh	init.sh
+RUN		chmod +x init.sh
+CMD		["./init.sh"]

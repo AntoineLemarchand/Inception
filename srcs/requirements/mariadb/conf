@@ -1,0 +1,6 @@
+[mysql]
+port							= 3306
+
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
