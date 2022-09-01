@@ -12,8 +12,6 @@ RUN		apk update && \
 RUN		apk add mysql mysql-client bash
 
 # setting up mariadb
-RUN		rm -rf /var/lib/mysqld/ib*
-COPY	conf			/etc/my.cnf
+COPY	conf			/etc/mysql/my.cnf
 COPY	tools/init.sh	init.sh
-RUN		chmod +x init.sh
-CMD		["./init.sh"]
+CMD		["bash", "./init.sh"]

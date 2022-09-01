@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  https:
+  web:
     image: "my_nginx:0.1"
     restart: always
     ports:
@@ -10,39 +10,52 @@ services:
       - $CERTS_/localhost.crt:/etc/nginx/nginx.crt
       - $CERTS_/localhost.key:/etc/nginx/nginx.key
       - /home/alemarch/WordPress:/www
+    networks:
+      - frontend
     depends_on:
-      - "frontend"
+      - front
     build:
       context: requirements/nginx/.
       args:
         DOMAIN_NAME: $DOMAIN_NAME
 
-  frontend:
+  front:
     image: "my_wordpress:0.1"
     restart: always
     ports:
       - "9000:9000"
-    volumes:
-      - /home/alemarch/data/WordPress/:/www
-      - /home/alemarch/data/DB:/var/lib/mysql
     depends_on:
-      - "backend"
+      - db
+    volumes:
+      - /home/alemarch/data/WordPress/:/var/www/html
+      - /home/alemarch/data/DB:/run/mysqld
+    networks:
+      - frontend
+      - backend
     build:
       context: requirements/wordpress/.
       args:
+        MYSQL_HOST: $MYSQL_HOST
         MYSQL_USER: $MYSQL_USER
         MYSQL_PASSWORD: $MYSQL_PASSWORD
 
-  backend:
-    image: "my_mariadb:0.1"
+  db:
+    image: "my_mariadb:0.2"
     restart: always
     ports:
       - "3306:3306"
     volumes:
-      - /home/alemarch/data/DB/:/run/mysqld
+      - $DB_VOLUME:/var/lib/mysql
+    networks:
+      - backend
     build:
       context: requirements/mariadb/.
       args:
-        MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+        DB_VOLUME: $DB_VOLUME
         MYSQL_USER: $MYSQL_USER
         MYSQL_PASSWORD: $MYSQL_PASSWORD
+        MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+
+networks:
+  frontend:
+  backend:
