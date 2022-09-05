@@ -9,9 +9,12 @@ RUN		apk update && \
 		apk upgrade --available
 
 # getting source
-RUN		apk add mysql mysql-client bash
+RUN		apk add mariadb mariadb-client mariadb-server-utils linux-pam linux-pam-dev bash
 
 # setting up mariadb
-COPY	conf			/etc/mysql/my.cnf
 COPY	tools/init.sh	init.sh
-CMD		["bash", "./init.sh"]
+RUN		chmod +x init.sh && \
+		mkdir -p /var/lib/mysql/data && chown -R mysql:mysql /var/lib/mysql/data
+COPY	conf/my.cnf			/etc/mysql/my.cnf
+
+CMD		["./init.sh"]

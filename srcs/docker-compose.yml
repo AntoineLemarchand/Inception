@@ -1,61 +1,75 @@
-version: "3"
+version: "3.7"
 
 services:
+
+# NGINX
   web:
     image: "my_nginx:0.1"
-    restart: always
+    init: true
+    restart: unless-stopped
     ports:
       - "443:443"
     volumes:
       - $CERTS_/localhost.crt:/etc/nginx/nginx.crt
       - $CERTS_/localhost.key:/etc/nginx/nginx.key
-      - /home/alemarch/WordPress:/www
+      - $WP_VOLUME:/www
     networks:
       - frontend
     depends_on:
       - front
+    environment:
+      DOMAIN_NAME:  $DOMAIN_NAME
     build:
       context: requirements/nginx/.
-      args:
-        DOMAIN_NAME: $DOMAIN_NAME
 
+# WORDPRESS
   front:
     image: "my_wordpress:0.1"
-    restart: always
+    restart: unless-stopped
+    init: true
     ports:
       - "9000:9000"
     depends_on:
       - db
     volumes:
-      - /home/alemarch/data/WordPress/:/var/www/html
-      - /home/alemarch/data/DB:/run/mysqld
+      - $WP_VOLUME:/var/www/html
+      - $DB_VOLUME:/run/mysqld
     networks:
       - frontend
       - backend
+    environment:
+      DOMAIN_NAME:            $DOMAIN_NAME
+      WP_DB_HOST:      $MYSQL_HOST
+      WP_DB_USER:      $MYSQL_USER
+      WP_DB_PASSWORD:  $MYSQL_PASSWORD
+      WP_DB_NAME:      $WP_DBNAME
+      WP_TITLE:               $WP_TITLE
+      WP_ADMIN:               $WP_ADMIN
+      WP_ADMIN_PASSWORD:      $WP_ADMIN_PASSWORD
     build:
       context: requirements/wordpress/.
-      args:
-        MYSQL_HOST: $MYSQL_HOST
-        MYSQL_USER: $MYSQL_USER
-        MYSQL_PASSWORD: $MYSQL_PASSWORD
 
+# MARIADB
   db:
     image: "my_mariadb:0.2"
-    restart: always
+    restart: unless-stopped
+    init: true
     ports:
       - "3306:3306"
     volumes:
       - $DB_VOLUME:/var/lib/mysql
     networks:
       - backend
+    environment:
+      WP_DBNAME:            $WP_DBNAME
+      WP_DB_HOST:    $MYSQL_HOST
+      MYSQL_USER:           $MYSQL_USER
+      MYSQL_PASSWORD:       $MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD:  $MYSQL_ROOT_PASSWORD
     build:
       context: requirements/mariadb/.
-      args:
-        DB_VOLUME: $DB_VOLUME
-        MYSQL_USER: $MYSQL_USER
-        MYSQL_PASSWORD: $MYSQL_PASSWORD
-        MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
 
 networks:
   frontend:
   backend:
+

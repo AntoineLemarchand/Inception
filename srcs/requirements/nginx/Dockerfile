@@ -13,7 +13,7 @@ RUN	apk add nginx && \
 	chown -R www:www /www
 
 # adding config
-COPY	conf 			/etc/nginx/nginx.conf
+COPY	conf/nginx.conf 			/etc/nginx/nginx.conf
 ARG	DOMAIN_NAME
 
 # exposing needed port
