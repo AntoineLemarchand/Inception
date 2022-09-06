@@ -4,7 +4,7 @@ services:
 
 # NGINX
   web:
-    image: "my_nginx:0.1"
+    image: "my_nginx:0.2"
     init: true
     restart: unless-stopped
     ports:
@@ -12,13 +12,14 @@ services:
     volumes:
       - $CERTS_/localhost.crt:/etc/nginx/nginx.crt
       - $CERTS_/localhost.key:/etc/nginx/nginx.key
-      - $WP_VOLUME:/www
+      - $WP_VOLUME:/var/www/html
     networks:
       - frontend
     depends_on:
       - front
     environment:
       DOMAIN_NAME:  $DOMAIN_NAME
+      CERTS_:       $CERTS_
     build:
       context: requirements/nginx/.
 
