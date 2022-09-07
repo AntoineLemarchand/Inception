@@ -1,7 +1,11 @@
 #!/bin/bash
 
-echo 'mysqld is not ready yet..'
-sleep 20
+echo CHECKING FOR MARIADB
+while ! mariadb -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD $WP_DBNAME > /dev/null;
+do
+	echo WAITING FOR MARIADB
+    sleep 4
+done
 
 if [ ! -f "index.php" ]
 then
@@ -12,12 +16,12 @@ then
 	echo DOWNLOADING WORDPRESS
 	wp core download --path="/var/www/html"
 	echo CREATING WORDPRESS CONFIG
-	wp config create --dbname="$WP_DB_NAME" \
-		--dbhost="$WP_DB_HOST" --dbuser="$WP_DB_USER" --dbpass="$WP_DB_PASSWORD"
+	wp config create --dbname="$WP_DBNAME" --dbuser="$MYSQL_USER" \
+		--dbpass="$MYSQL_PASSWORD" --dbhost="$MYSQL_HOST"
 	echo INSTALLING WORDPRESS
 	wp core install --url="alemarch.42.fr" --title="$WP_TITLE" \
 		--admin_name="$WP_ADMIN" --admin_email="alemarch@student.42.fr" \
-		--skip-email --admin_password="$WP_ADMIN_PASSWORD" --allow-root
+		--skip-email --admin_password="$WP_ADMIN_PASSWORD"
 	echo "CREATING alemarch_user"
 	wp user create $WP_USER antoine.lemarchand05@gmail.com \
 		--user_pass=$WP_USER_PASSWORD
