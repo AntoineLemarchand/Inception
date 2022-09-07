@@ -1,16 +1,24 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/08/16 14:33:53 by alemarch          #+#    #+#              #
-#    Updated: 2022/08/24 15:39:51 by alemarch         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+all:
+	@ if [ ! -d /home/alemarch/data/WP ]; then \
+		mkdir /home/alemarch/data/WP; \
+	fi
+	@ if [ ! -d /home/alemarch/data/DB ]; then \
+		mkdir /home/alemarch/data/DB; \
+	fi
+	@ if [ $(cat /etc/hosts | grep alemarch.42.fr) ]; then \
+		echo "127.0.0.1	alemarch.42.fr" >> /etc/hosts; \
+	fi
+	cd srcs && docker-compose up --build
+	cd -
 
-# **************************************************************************** # 
-#                         DO NOT EDIT BELOW THIS LINE                          #
-# **************************************************************************** #
+clean:
+	cd srcs
+	docker system prune -f
+	docker-compose -f srcs/docker-compose.yml down
+	cd -
 
+fclean: clean
+	rm -rf /home/alemarch/data/WP/*
+	rm -rf /home/alemarch/data/DB/*
+
+re: fclean all
