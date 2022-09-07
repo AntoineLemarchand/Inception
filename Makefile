@@ -1,9 +1,9 @@
 all:
 	@ if [ ! -d /home/alemarch/data/WP ]; then \
-		mkdir /home/alemarch/data/WP; \
+		mkdir -p /home/alemarch/data/WP; \
 	fi
 	@ if [ ! -d /home/alemarch/data/DB ]; then \
-		mkdir /home/alemarch/data/DB; \
+		mkdir -p /home/alemarch/data/DB; \
 	fi
 	@ if [ $(cat /etc/hosts | grep alemarch.42.fr) ]; then \
 		echo "127.0.0.1	alemarch.42.fr" >> /etc/hosts; \
