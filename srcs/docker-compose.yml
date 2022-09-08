@@ -1,7 +1,22 @@
 version: "3.7"
 
-services:
+networks:
+  frontend:
+  backend:
 
+volumes:
+  DB:
+    driver_opts:
+      type: none
+      device: /home/alemarch/DB
+      o: bind
+  WP:
+    driver_opts:
+      type: none
+      device: /home/alemarch/WP
+      o: bind
+
+services:
 # NGINX
   web:
     image: "my_nginx:0.2"
@@ -10,7 +25,9 @@ services:
     ports:
       - "443:443"
     volumes:
-      - website:/var/www/html
+      - $CERTS_/localhost.crt:/etc/nginx/nginx.crt
+      - $CERTS_/localhost.key:/etc/nginx/nginx.key
+      - $WP_VOLUME:/var/www/html
     networks:
       - frontend
     depends_on:
@@ -31,8 +48,8 @@ services:
     depends_on:
       - db
     volumes:
-      - website:/var/www/html
-      - database:/run/mysqld
+      - $WP_VOLUME:/var/www/html
+      - $DB_VOLUME:/run/mysqld
     networks:
       - frontend
       - backend
@@ -58,7 +75,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - database:/var/lib/mysql
+      - $DB_VOLUME:/var/lib/mysql
     networks:
       - backend
     environment:
@@ -69,19 +86,3 @@ services:
       MYSQL_ROOT_PASSWORD:  $MYSQL_ROOT_PASSWORD
     build:
       context: requirements/mariadb/.
-
-networks:
-  frontend:
-  backend:
-
-volumes:
-  website:
-      driver_opts:
-        type: none
-        device: $WP_VOLUME
-        o: bind
-  database:
-      driver_opts:
-        type: none
-        device: $DB_VOLUME
-        o: bind

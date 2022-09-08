@@ -18,6 +18,10 @@ then
 	echo CREATING WORDPRESS CONFIG
 	wp config create --dbname="$WP_DBNAME" --dbuser="$MYSQL_USER" \
 		--dbpass="$MYSQL_PASSWORD" --dbhost="$MYSQL_HOST"
+	if [ ! -f wp-config.php ]
+	then
+		return 1
+	fi
 	echo INSTALLING WORDPRESS
 	wp core install --url="alemarch.42.fr" --title="$WP_TITLE" \
 		--admin_name="$WP_ADMIN" --admin_email="alemarch@student.42.fr" \

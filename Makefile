@@ -5,7 +5,7 @@ all:
 	@ if [ ! -d /home/alemarch/data/DB ]; then \
 		mkdir -p /home/alemarch/data/DB; \
 	fi
-	@ if [ $(cat /etc/hosts | grep alemarch.42.fr) ]; then \
+	@ if ! grep -q "alemarch.42.fr" /etc/hosts; then  \
 		echo "127.0.0.1	alemarch.42.fr" >> /etc/hosts; \
 	fi
 	cd srcs && docker-compose up --build
