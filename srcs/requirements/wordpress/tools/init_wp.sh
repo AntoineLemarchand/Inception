@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo CONFIGURING PHP-FPM
+echo "listen = 9000" >> /etc/php8/php-fpm.d/www.conf
+sed -i "s/;error_log/error_log/" /etc/php8/php-fpm.conf
+ln -sf /dev/stderr /var/log/php8/error.log
+
 echo CHECKING FOR MARIADB
 while ! mariadb -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD $WP_DBNAME > /dev/null;
 do
@@ -9,10 +14,6 @@ done
 
 if [ ! -f "index.php" ]
 then
-	echo CONFIGURING PHP-FPM
-	echo "listen = 9000" >> /etc/php8/php-fpm.d/www.conf
-	sed -i "s/;error_log/error_log/" /etc/php8/php-fpm.conf
-	ln -sf /dev/stderr /var/log/php8/error.log
 	echo DOWNLOADING WORDPRESS
 	wp core download --path="/var/www/html"
 	echo CREATING WORDPRESS CONFIG

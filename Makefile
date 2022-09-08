@@ -8,14 +8,14 @@ all:
 	@ if ! grep -q "alemarch.42.fr" /etc/hosts; then  \
 		echo "127.0.0.1	alemarch.42.fr" >> /etc/hosts; \
 	fi
-	cd srcs && docker-compose up --build
-	cd -
+	cd srcs && docker-compose up --build && cd -
 
 clean:
 	cd srcs
 	docker system prune -f
 	docker-compose -f srcs/docker-compose.yml down
-	cd -
+	docker volume rm srcs_DB srcs_WP
+	docker rmi my_wordpress:0.1 my_nginx:0.2 my_mariadb:0.2
 
 fclean: clean
 	rm -rf /home/alemarch/data/WP/*
