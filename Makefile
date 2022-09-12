@@ -11,11 +11,7 @@ all:
 	cd srcs && docker-compose up --build && cd -
 
 clean:
-	cd srcs
-	docker system prune -f
-	docker-compose -f srcs/docker-compose.yml down
-	docker volume rm srcs_DB srcs_WP
-	docker rmi my_wordpress:0.1 my_nginx:0.2 my_mariadb:0.2
+	cd srcs && docker-compose -f docker-compose.yml down && cd -
 
 fclean: clean
 	rm -rf /home/alemarch/data/WP/*
