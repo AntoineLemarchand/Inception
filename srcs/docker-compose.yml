@@ -19,14 +19,13 @@ volumes:
 services:
 # NGINX
   web:
+    container_name: "my_nginx"
     image: "my_nginx:0.2"
     init: true
     restart: unless-stopped
     ports:
         - "443:443"
     volumes:
-      - $CERTS_/localhost.crt:/etc/nginx/nginx.crt
-      - $CERTS_/localhost.key:/etc/nginx/nginx.key
       - $WP_VOLUME:/var/www/html
     networks:
       - frontend
@@ -40,6 +39,7 @@ services:
 
 # WORDPRESS
   front:
+    container_name: "my_wordpress"
     image: "my_wordpress:0.1"
     restart: unless-stopped
     init: true
@@ -67,6 +67,7 @@ services:
 
 # MARIADB
   db:
+    container_name: "my_mariadb"
     image: "my_mariadb:0.2"
     restart: unless-stopped
     init: true

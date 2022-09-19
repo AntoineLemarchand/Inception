@@ -16,5 +16,6 @@ COPY	tools/init.sh	init.sh
 RUN		chmod +x init.sh && \
 		mkdir -p /var/lib/mysql/data && chown -R mysql:mysql /var/lib/mysql/data
 COPY	conf/my.cnf			/etc/mysql/my.cnf
+COPY	conf/my.cnf			/etc/my.cnf
 
 CMD		["./init.sh"]
